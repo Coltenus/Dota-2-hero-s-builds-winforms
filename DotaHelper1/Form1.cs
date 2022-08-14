@@ -17,6 +17,11 @@ namespace DotaHelper1
         public Form1()
         {
             InitializeComponent();
+            if (settings.Default.isDarkMode)
+            {
+                settings.Default.isDarkMode = !settings.Default.isDarkMode;
+                button2_Click(new object(), new EventArgs());
+            }
         }
 
         public bool isThreadWorks = false;
@@ -46,6 +51,36 @@ namespace DotaHelper1
                 label3.Visible = true;
                 label4.Visible = true;
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if(settings.Default.isDarkMode)
+            {
+                BackColor = DefaultBackColor;
+                label1.BackColor = DefaultBackColor;
+                label1.ForeColor = DefaultForeColor;
+                label2.BackColor = DefaultBackColor;
+                label2.ForeColor = DefaultForeColor;
+                label3.BackColor = DefaultBackColor;
+                label3.ForeColor = DefaultForeColor;
+                label4.BackColor = DefaultBackColor;
+                label4.ForeColor = DefaultForeColor;
+            }
+            else
+            {
+                BackColor = Color.FromArgb(32, 32, 32);
+                label1.ForeColor = DefaultBackColor;
+                label1.BackColor = Color.FromArgb(32, 32, 32);
+                label2.ForeColor = DefaultBackColor;
+                label2.BackColor = Color.FromArgb(32, 32, 32);
+                label3.ForeColor = DefaultBackColor;
+                label3.BackColor = Color.FromArgb(32, 32, 32);
+                label4.ForeColor = DefaultBackColor;
+                label4.BackColor = Color.FromArgb(32, 32, 32);
+            }
+            settings.Default.isDarkMode = !settings.Default.isDarkMode;
+            settings.Default.Save();
         }
     }
 }

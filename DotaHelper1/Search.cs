@@ -70,8 +70,12 @@ namespace Search
                             }
                             else if (abilities.IndexOf(item2) == 4)
                             {
-                                tx += $"t ";
-                                talents += $"{item.GetAttribute("alt").Remove(0, 8)}\n";
+                                if (item.GetAttribute("alt").Remove(0, 8) == "") tx += $"+ ";
+                                else
+                                {
+                                    tx += $"T ";
+                                    talents += $"{item.GetAttribute("alt").Remove(0, 8)}\n";
+                                }
                             }
                         }
                     }

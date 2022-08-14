@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium;
 using Browser;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace Search
 {
@@ -57,18 +58,57 @@ namespace Search
                     by: By.XPath($"/html/body/div[2]/div[2]/div[3]/div[4]/section[{index + 3}]/article/div/div[4]")).FindElements(
                     by: By.TagName("img"));
                 string talents = string.Empty;
+                int shift2 = 0;
+                if(abilities.Count > 5) shift2++;
+                if(abilities.Count > 6) shift2++;
                 tx += "\nAbilities build\n";
+                var listAb = new List<int>();
+                for(int i = 1; i < abilities.Count; i++)
+                {
+                    listAb.Add(i);
+                }
+                var listUsedAb = new List<int>();
+                foreach (var item in abBuild)
+                {
+                    foreach (var item2 in abilities)
+                    {
+                        if (item.GetAttribute("src") == item2.GetAttribute("src")
+                            && abilities.IndexOf(item2) < 4 + shift2
+                            && !listUsedAb.Contains(abilities.IndexOf(item2)+1))
+                        {
+                            listUsedAb.Add(abilities.IndexOf(item2)+1);
+                        }
+                    }
+                }
+                int unusedAb = 0;
+                for(int i = 0; i<listAb.Count; i++)
+                {
+                    if (!listUsedAb.Contains(listAb[i]))
+                        unusedAb = listAb[i];
+                }
                 foreach (var item in abBuild)
                 {
                     foreach (var item2 in abilities)
                     {
                         if (item.GetAttribute("src") == item2.GetAttribute("src"))
                         {
-                            if (abilities.IndexOf(item2) < 4)
+                            if (abilities.IndexOf(item2) < 4+shift2)
                             {
-                                tx += $"{abilities.IndexOf(item2) + 1} ";
+                                if (abilities.IndexOf(item2) == 3 + shift2) tx += $"R ";
+                                else if(unusedAb != 0)
+                                {
+                                    if (abilities.IndexOf(item2) > unusedAb - 1)
+                                    {
+                                        tx += $"{abilities.IndexOf(item2)} ";
+                                    }
+                                    else if (abilities.IndexOf(item2) < unusedAb - 1)
+                                    {
+                                        tx += $"{abilities.IndexOf(item2) + 1} ";
+                                    }
+                                }
+                                else tx += $"{abilities.IndexOf(item2) + 1} ";
                             }
-                            else if (abilities.IndexOf(item2) == 4)
+                            else if (abilities.IndexOf(item2) == 4+shift2)
                             {
                                 if (item.GetAttribute("alt").Remove(0, 8) == "") tx += $"+ ";
                                 else
